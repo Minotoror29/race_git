@@ -31,8 +31,6 @@ public class ShipController : MonoBehaviour
     {
         HandleAccelerationInput();
         HandleRotationInput();
-
-        Rotate();
     }
 
     private void HandleAccelerationInput()
@@ -55,6 +53,7 @@ public class ShipController : MonoBehaviour
     private void FixedUpdate()
     {
         Accelerate();
+        Rotate();
     }
 
     private void Accelerate()
