@@ -31,6 +31,7 @@ public class ShipController : MonoBehaviour
     {
         HandleAccelerationInput();
         HandleRotationInput();
+        HandleBoostInput();
     }
 
     private void HandleAccelerationInput()
@@ -48,6 +49,19 @@ public class ShipController : MonoBehaviour
     private void HandleRotationInput()
     {
         _rotationInput = _playerControls.InGame.Rotate.ReadValue<Vector2>().x;
+
+        if (_rotationInput == 0)
+        {
+            transform.Rotate(Vector3.zero);
+        }
+    }
+
+    private void HandleBoostInput()
+    {
+        if (_playerControls.InGame.Boost.ReadValue<float>() > 0)
+        {
+            _currentSpeed *= 2;
+        }
     }
 
     private void FixedUpdate()
