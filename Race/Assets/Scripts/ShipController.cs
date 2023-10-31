@@ -9,10 +9,14 @@ public class ShipController : MonoBehaviour
     private PlayerControls _playerControls;
 
     [SerializeField] private float maximumSpeed;
+    [SerializeField] private float brakeSpeed;
     private float _currentSpeed = 0f;
 
     [SerializeField] private float rotationSpeed = 1f;
+    [SerializeField] private float rotationBrakeSpeed = 1f;
     private float _rotationInput = 0f;
+
+    public float CurrentSpeed { get { return _currentSpeed; } }
 
     private void Start()
     {
@@ -49,11 +53,6 @@ public class ShipController : MonoBehaviour
     private void HandleRotationInput()
     {
         _rotationInput = _playerControls.InGame.Rotate.ReadValue<Vector2>().x;
-
-        if (_rotationInput == 0)
-        {
-            transform.Rotate(Vector3.zero);
-        }
     }
 
     private void HandleBoostInput()
@@ -72,11 +71,37 @@ public class ShipController : MonoBehaviour
 
     private void Accelerate()
     {
-        _rb.velocity = transform.forward * _currentSpeed;
+        _rb.velocity = _currentSpeed * Time.fixedDeltaTime * transform.forward;
+
+        //if (_currentSpeed > 0f)
+        //{
+        //    _rb.AddForce(_currentSpeed * Time.fixedDeltaTime * transform.forward, ForceMode.Impulse);
+        //}
+
+        //Brake();
+
+        //Debug.Log(_rb.velocity.magnitude);
+    }
+
+    private void Brake()
+    {
+        _rb.velocity = Vector3.Lerp(_rb.velocity, Vector3.zero, brakeSpeed * Time.fixedDeltaTime);
     }
 
     private void Rotate()
     {
         transform.Rotate(new Vector3(0, _rotationInput * rotationSpeed, 0));
+
+        //if (_rotationInput != 0f)
+        //{
+        //    _rb.AddTorque(_rotationInput * rotationSpeed * Time.fixedDeltaTime * transform.up, ForceMode.Impulse);
+        //}
+        //StopAngularRotation();
+    }
+
+    private void StopAngularRotation()
+    {
+        _rb.angularVelocity = Vector3.Lerp(_rb.angularVelocity, Vector3.zero, rotationBrakeSpeed * Time.fixedDeltaTime);
+        //_rb.angularVelocity = Vector3.zero;
     }
 }
