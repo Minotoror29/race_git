@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ShipIdleState : ShipState
 {
-    public ShipIdleState(ShipController controller) : base(controller)
+    public ShipIdleState(ShipController controller, ShipStateFactory factory) : base(controller, factory)
     {
 
     }
@@ -23,7 +23,7 @@ public class ShipIdleState : ShipState
     {
         if (PlayerControls.InGame.Accelerate.ReadValue<float>() > 0)
         {
-            Controller.ChangeState(new ShipAcceleratingState(Controller));
+            Controller.ChangeState(Factory.AcceleratingState);
         }
     }
 

@@ -10,6 +10,7 @@ public class ShipController : MonoBehaviour
     private Rigidbody _rb;
     private PlayerControls _playerControls;
 
+    private ShipStateFactory _factory;
     private ShipState _currentState;
 
     [SerializeField] private float maximumSpeed = 2500f;
@@ -72,7 +73,8 @@ public class ShipController : MonoBehaviour
         _playerControls.InGame.Enable();
         _playerControls.InGame.Boost.performed += ctx => Boost();
 
-        ChangeState(new ShipIdleState(this));
+        _factory = new ShipStateFactory(this);
+        ChangeState(_factory.IdleState);
     }
 
     public void ChangeState(ShipState nextState)

@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,29 +8,21 @@ public class ShipBoostState : ShipState
 {
     private float _boostSpeed;
     private float _accelerationTimer;
+    private CinemachineVirtualCamera _cam;
+    private int _index;
 
-    public ShipBoostState(ShipController controller, float boostSpeed) : base(controller)
+    public ShipBoostState(ShipController controller, ShipStateFactory factory, float boostSpeed, CinemachineVirtualCamera cam, int index) : base(controller, factory)
     {
         _boostSpeed = boostSpeed;
+        _cam = cam;
+        _index = index;
     }
 
     public override void Enter()
     {
-        Controller.CurrentSpeed = _boostSpeed;
         _accelerationTimer = 0f;
 
-        if (_boostSpeed == Controller.Boost1Speed)
-        {
-            Controller.CameraManager.CameraTransition(Controller.Boost1Cam);
-        }
-        else if (_boostSpeed == Controller.Boost2Speed)
-        {
-            Controller.CameraManager.CameraTransition(Controller.Boost2Cam);
-        }
-        else if (_boostSpeed == Controller.Boost3Speed)
-        {
-            Controller.CameraManager.CameraTransition(Controller.Boost3Cam);
-        }
+        Controller.CameraManager.CameraTransition(_cam);
     }
 
     public override void Exit()
@@ -46,7 +39,7 @@ public class ShipBoostState : ShipState
 
         if (PlayerControls.InGame.Accelerate.ReadValue<float>() == 0)
         {
-            Controller.ChangeState(new ShipIdleState(Controller));
+            Controller.ChangeState(Factory.IdleState);
         }
     }
 
@@ -58,12 +51,9 @@ public class ShipBoostState : ShipState
     {
         base.Boost();
 
-        if (Controller.CurrentSpeed == Controller.Boost1Speed)
+        if (_index < Factory.BoostStates.Count - 1 && Controller.CurrentSpeed == _boostSpeed)
         {
-            Controller.ChangeState(new ShipBoostState(Controller, Controller.Boost2Speed));
-        } else if (Controller.CurrentSpeed == Controller.Boost2Speed)
-        {
-            Controller.ChangeState(new ShipBoostState(Controller, Controller.Boost3Speed));
+            Controller.ChangeState(Factory.BoostStates[_index + 1]);
         }
     }
 }

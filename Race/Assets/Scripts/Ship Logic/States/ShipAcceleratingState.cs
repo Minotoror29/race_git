@@ -7,7 +7,7 @@ public class ShipAcceleratingState : ShipState
 {
     private float _accelerationTimer;
 
-    public ShipAcceleratingState(ShipController controller) : base(controller)
+    public ShipAcceleratingState(ShipController controller, ShipStateFactory factory) : base(controller, factory)
     {
     }
 
@@ -31,7 +31,7 @@ public class ShipAcceleratingState : ShipState
 
         if (PlayerControls.InGame.Accelerate.ReadValue<float>() == 0)
         {
-            Controller.ChangeState(new ShipIdleState(Controller));
+            Controller.ChangeState(Factory.IdleState);
         }
     }
 
@@ -45,7 +45,7 @@ public class ShipAcceleratingState : ShipState
 
         if (Controller.CurrentSpeed == Controller.MaximumSpeed)
         {
-            Controller.ChangeState(new ShipBoostState(Controller, Controller.Boost1Speed));
+            Controller.ChangeState(Factory.BoostStates[0]);
         }
     }
 }
