@@ -9,6 +9,8 @@ public class ShipController : MonoBehaviour
     private Rigidbody _rb;
     private PlayerControls _playerControls;
 
+    private ShipState _currentState;
+
     [SerializeField] private float maximumSpeed = 2500f;
     [SerializeField] private AnimationCurve accelerationCurve;
     [SerializeField] private TextMeshProUGUI speedMeter;
@@ -18,15 +20,34 @@ public class ShipController : MonoBehaviour
     [SerializeField] private float boost1Speed = 5000f;
     [SerializeField] private float boost2Speed = 7500f;
     [SerializeField] private float boost3Speed = 10000f;
+    [SerializeField] private AnimationCurve boostAccelerationCurve;
 
     [SerializeField] private float rotationSpeed = 1f;
     private float _rotationInput = 0f;
 
-    public float CurrentSpeed { get { return _currentSpeed; } }
+    public Rigidbody Rb { get { return _rb; } }
+    public PlayerControls PlayerControls { get { return _playerControls; } }
+    public float MaximumSpeed { get { return maximumSpeed; } }
+    public AnimationCurve AccelerationCurve { get { return accelerationCurve; } }
+    public float CurrentSpeed { get { return _currentSpeed; } set { _currentSpeed = value; } }
+    public float Boost1Speed { get { return boost1Speed; } }
+    public float Boost2Speed { get { return boost2Speed; } }
+    public float Boost3Speed { get { return boost3Speed; } }
+    public AnimationCurve BoostAccelerationCurve { get { return boostAccelerationCurve; } }
 
     private void Start()
     {
         Initialize();
+    }
+
+    private void Update()
+    {
+        UpdateLogic();
+    }
+
+    private void FixedUpdate()
+    {
+        UpdatePhysics();
     }
 
     public void Initialize()
@@ -36,11 +57,22 @@ public class ShipController : MonoBehaviour
         _playerControls = new PlayerControls();
         _playerControls.InGame.Enable();
         _playerControls.InGame.Boost.performed += ctx => Boost();
+
+        ChangeState(new ShipIdleState(this));
     }
 
-    private void Update()
+    public void ChangeState(ShipState nextState)
     {
-        HandleAccelerationInput();
+        _currentState?.Exit();
+        _currentState = nextState;
+        _currentState.Enter();
+    }
+
+    private void UpdateLogic()
+    {
+        _currentState.UpdateLogic();
+
+        //HandleAccelerationInput();
         HandleRotationInput();
 
         speedMeter.text = ((int)_currentSpeed).ToString();
@@ -70,22 +102,24 @@ public class ShipController : MonoBehaviour
 
     private void Boost()
     {
-        Debug.Log("Boost");
+        _currentState.Boost();
 
-        if (_currentSpeed == maximumSpeed)
-        {
-            _currentSpeed = boost1Speed;
-        } else if (_currentSpeed == boost1Speed)
-        {
-            _currentSpeed = boost2Speed;
-        } else if (_currentSpeed == boost2Speed)
-        {
-            _currentSpeed = boost3Speed;
-        }
+        //if (_currentSpeed == maximumSpeed)
+        //{
+        //    _currentSpeed = boost1Speed;
+        //} else if (_currentSpeed == boost1Speed)
+        //{
+        //    _currentSpeed = boost2Speed;
+        //} else if (_currentSpeed == boost2Speed)
+        //{
+        //    _currentSpeed = boost3Speed;
+        //}
     }
 
-    private void FixedUpdate()
+    private void UpdatePhysics()
     {
+        _currentState.UpdatePhysics();
+
         Accelerate();
         Rotate();
     }
