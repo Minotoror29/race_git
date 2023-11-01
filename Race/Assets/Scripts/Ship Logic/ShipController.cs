@@ -24,6 +24,8 @@ public class ShipController : MonoBehaviour
     [SerializeField] private float boost3Speed = 10000f;
     [SerializeField] private AnimationCurve boostAccelerationCurve;
 
+    [SerializeField] private AnimationCurve brakeCurve;
+
     [SerializeField] private float rotationSpeed = 1f;
     private float _rotationInput = 0f;
 
@@ -43,6 +45,7 @@ public class ShipController : MonoBehaviour
     public float Boost2Speed { get { return boost2Speed; } }
     public float Boost3Speed { get { return boost3Speed; } }
     public AnimationCurve BoostAccelerationCurve { get { return boostAccelerationCurve; } }
+    public AnimationCurve BrakeCurve { get { return brakeCurve; } }
     public CameraManager CameraManager { get { return cameraManager; } }
     public CinemachineVirtualCamera IdleCam { get { return idleCam; } }
     public CinemachineVirtualCamera AccelerationCam { get { return accelerationCam; } }
@@ -88,29 +91,9 @@ public class ShipController : MonoBehaviour
     {
         _currentState.UpdateLogic();
 
-        //HandleAccelerationInput();
         HandleRotationInput();
 
-        //HandleCamera();
-
         speedMeter.text = ((int)_currentSpeed).ToString();
-    }
-
-    private void HandleAccelerationInput()
-    {
-        if (_playerControls.InGame.Accelerate.ReadValue<float>() > 0)
-        {
-            if (_accelerationTimer < accelerationCurve.keys[2].time)
-            {
-                _accelerationTimer += Time.deltaTime;
-                _currentSpeed = accelerationCurve.Evaluate(_accelerationTimer) * maximumSpeed;
-            }
-        }
-        else
-        {
-            _accelerationTimer = 0f;
-            _currentSpeed = 0f;
-        }
     }
 
     private void HandleRotationInput()
@@ -118,25 +101,9 @@ public class ShipController : MonoBehaviour
         _rotationInput = _playerControls.InGame.Rotate.ReadValue<Vector2>().x;
     }
 
-    private void HandleCamera()
-    {
-        idleCam.m_Lens.FieldOfView = _currentSpeed / 250 + 60f;
-    }
-
     private void Boost()
     {
         _currentState.Boost();
-
-        //if (_currentSpeed == maximumSpeed)
-        //{
-        //    _currentSpeed = boost1Speed;
-        //} else if (_currentSpeed == boost1Speed)
-        //{
-        //    _currentSpeed = boost2Speed;
-        //} else if (_currentSpeed == boost2Speed)
-        //{
-        //    _currentSpeed = boost3Speed;
-        //}
     }
 
     private void UpdatePhysics()

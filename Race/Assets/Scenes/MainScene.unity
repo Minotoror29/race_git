@@ -13820,6 +13820,30 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  brakeCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: -0.9809904
+      outSlope: -0.9809904
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.05867132
+    - serializedVersion: 3
+      time: 2
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.058915913
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   rotationSpeed: 1
   cameraManager: {fileID: 5965938}
   idleCam: {fileID: 1707409256}
@@ -16291,8 +16315,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1339617898}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.18910751, y: 0.000000018890205, z: -0.0000000036379209, w: 0.9819564}
-  m_LocalPosition: {x: 0, y: 4.5, z: -7.5}
+  m_LocalRotation: {x: 0.52573115, y: -0.000000015058845, z: 0.000000009306877, w: 0.85065085}
+  m_LocalPosition: {x: 0, y: 4.5, z: -1.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
