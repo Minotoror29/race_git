@@ -6,6 +6,7 @@ using UnityEngine;
 public class ShipAcceleratingState : ShipState
 {
     private float _accelerationTimer;
+    private float _startSpeed;
 
     public ShipAcceleratingState(ShipController controller, ShipStateFactory factory) : base(controller, factory)
     {
@@ -13,7 +14,8 @@ public class ShipAcceleratingState : ShipState
 
     public override void Enter()
     {
-        _accelerationTimer = 0f;
+        _accelerationTimer = (Controller.CurrentSpeed * 5f) / Controller.MaximumSpeed;
+        _startSpeed = Controller.CurrentSpeed;
         Controller.CameraManager.CameraTransition(Controller.AccelerationCam);
     }
 

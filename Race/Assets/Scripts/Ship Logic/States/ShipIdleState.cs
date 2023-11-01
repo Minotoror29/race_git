@@ -32,7 +32,7 @@ public class ShipIdleState : ShipState
             Controller.CurrentSpeed = Controller.BrakeCurve.Evaluate(_brakingTimer) * _startSpeed;
         }
 
-        if (PlayerControls.InGame.Accelerate.ReadValue<float>() > 0)
+        if (PlayerControls.InGame.Accelerate.ReadValue<float>() > 0 && Controller.CurrentSpeed <= Controller.MaximumSpeed)
         {
             Controller.ChangeState(Factory.AcceleratingState);
         }
