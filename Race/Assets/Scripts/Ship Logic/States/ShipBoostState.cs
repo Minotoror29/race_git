@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ShipBoostState : ShipState
@@ -7,15 +8,28 @@ public class ShipBoostState : ShipState
     private float _boostSpeed;
     private float _accelerationTimer;
 
-    public ShipBoostState(ShipController controller, float boostSPeed) : base(controller)
+    public ShipBoostState(ShipController controller, float boostSpeed) : base(controller)
     {
-        _boostSpeed = boostSPeed;
+        _boostSpeed = boostSpeed;
     }
 
     public override void Enter()
     {
         Controller.CurrentSpeed = _boostSpeed;
         _accelerationTimer = 0f;
+
+        if (_boostSpeed == Controller.Boost1Speed)
+        {
+            Controller.CameraManager.CameraTransition(Controller.Boost1Cam);
+        }
+        else if (_boostSpeed == Controller.Boost2Speed)
+        {
+            Controller.CameraManager.CameraTransition(Controller.Boost2Cam);
+        }
+        else if (_boostSpeed == Controller.Boost3Speed)
+        {
+            Controller.CameraManager.CameraTransition(Controller.Boost3Cam);
+        }
     }
 
     public override void Exit()
@@ -24,7 +38,7 @@ public class ShipBoostState : ShipState
 
     public override void UpdateLogic()
     {
-        if (_accelerationTimer < Controller.BoostAccelerationCurve.keys[2].time)
+        if (_accelerationTimer < Controller.BoostAccelerationCurve.keys[Controller.BoostAccelerationCurve.keys.Count() - 1].time)
         {
             _accelerationTimer += Time.deltaTime;
             Controller.CurrentSpeed = Controller.BoostAccelerationCurve.Evaluate(_accelerationTimer) * Controller.MaximumSpeed + (_boostSpeed - Controller.MaximumSpeed);

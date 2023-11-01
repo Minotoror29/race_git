@@ -12,6 +12,7 @@ public class ShipIdleState : ShipState
     public override void Enter()
     {
         Controller.CurrentSpeed = 0f;
+        Controller.CameraManager.CameraTransition(Controller.IdleCam);
     }
 
     public override void Exit()

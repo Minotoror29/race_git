@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ShipAcceleratingState : ShipState
@@ -13,6 +14,7 @@ public class ShipAcceleratingState : ShipState
     public override void Enter()
     {
         _accelerationTimer = 0f;
+        Controller.CameraManager.CameraTransition(Controller.AccelerationCam);
     }
 
     public override void Exit()
@@ -21,7 +23,7 @@ public class ShipAcceleratingState : ShipState
 
     public override void UpdateLogic()
     {
-        if (_accelerationTimer < Controller.AccelerationCurve.keys[2].time)
+        if (_accelerationTimer < Controller.AccelerationCurve.keys[Controller.AccelerationCurve.keys.Count() - 1].time)
         {
             _accelerationTimer += Time.deltaTime;
             Controller.CurrentSpeed = Controller.AccelerationCurve.Evaluate(_accelerationTimer) * Controller.MaximumSpeed;

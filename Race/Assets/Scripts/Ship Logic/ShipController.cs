@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -25,6 +26,13 @@ public class ShipController : MonoBehaviour
     [SerializeField] private float rotationSpeed = 1f;
     private float _rotationInput = 0f;
 
+    [SerializeField] private CameraManager cameraManager;
+    [SerializeField] private CinemachineVirtualCamera idleCam;
+    [SerializeField] private CinemachineVirtualCamera accelerationCam;
+    [SerializeField] private CinemachineVirtualCamera boost1Cam;
+    [SerializeField] private CinemachineVirtualCamera boost2Cam;
+    [SerializeField] private CinemachineVirtualCamera boost3Cam;
+
     public Rigidbody Rb { get { return _rb; } }
     public PlayerControls PlayerControls { get { return _playerControls; } }
     public float MaximumSpeed { get { return maximumSpeed; } }
@@ -34,6 +42,12 @@ public class ShipController : MonoBehaviour
     public float Boost2Speed { get { return boost2Speed; } }
     public float Boost3Speed { get { return boost3Speed; } }
     public AnimationCurve BoostAccelerationCurve { get { return boostAccelerationCurve; } }
+    public CameraManager CameraManager { get { return cameraManager; } }
+    public CinemachineVirtualCamera IdleCam { get { return idleCam; } }
+    public CinemachineVirtualCamera AccelerationCam { get { return accelerationCam; } }
+    public CinemachineVirtualCamera Boost1Cam { get { return boost1Cam; } }
+    public CinemachineVirtualCamera Boost2Cam { get { return boost2Cam; } }
+    public CinemachineVirtualCamera Boost3Cam { get { return boost3Cam; } }
 
     private void Start()
     {
@@ -75,6 +89,8 @@ public class ShipController : MonoBehaviour
         //HandleAccelerationInput();
         HandleRotationInput();
 
+        //HandleCamera();
+
         speedMeter.text = ((int)_currentSpeed).ToString();
     }
 
@@ -98,6 +114,11 @@ public class ShipController : MonoBehaviour
     private void HandleRotationInput()
     {
         _rotationInput = _playerControls.InGame.Rotate.ReadValue<Vector2>().x;
+    }
+
+    private void HandleCamera()
+    {
+        idleCam.m_Lens.FieldOfView = _currentSpeed / 250 + 60f;
     }
 
     private void Boost()
