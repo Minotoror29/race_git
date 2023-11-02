@@ -24,8 +24,14 @@ public class ShipIdleState : ShipState
     {
     }
 
+    public override void OnCollisionEnter(Collision collision)
+    {
+    }
+
     public override void UpdateLogic()
     {
+        Controller.Rotate();
+
         if (_brakingTimer < Controller.BrakeCurve.keys[Controller.BrakeCurve.keys.Count() - 1].time)
         {
             _brakingTimer += Time.deltaTime;
@@ -40,5 +46,6 @@ public class ShipIdleState : ShipState
 
     public override void UpdatePhysics()
     {
+        Controller.Accelerate();
     }
 }

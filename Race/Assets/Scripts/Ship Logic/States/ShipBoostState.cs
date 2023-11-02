@@ -31,6 +31,8 @@ public class ShipBoostState : ShipState
 
     public override void UpdateLogic()
     {
+        Controller.Rotate();
+
         if (_accelerationTimer < Controller.BoostAccelerationCurve.keys[Controller.BoostAccelerationCurve.keys.Count() - 1].time)
         {
             _accelerationTimer += Time.deltaTime;
@@ -45,6 +47,7 @@ public class ShipBoostState : ShipState
 
     public override void UpdatePhysics()
     {
+        Controller.Accelerate();
     }
 
     public override void Boost()
@@ -55,5 +58,10 @@ public class ShipBoostState : ShipState
         {
             Controller.ChangeState(Factory.BoostStates[_index + 1]);
         }
+    }
+
+    public override void OnCollisionEnter(Collision collision)
+    {
+        Controller.ChangeState(new ShipStunState(Controller, Factory, collision.GetContact(0).normal));
     }
 }

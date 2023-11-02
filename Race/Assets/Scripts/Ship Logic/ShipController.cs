@@ -26,6 +26,8 @@ public class ShipController : MonoBehaviour
 
     [SerializeField] private AnimationCurve brakeCurve;
 
+    [SerializeField] private float stunTime = 2f;
+
     [SerializeField] private float rotationSpeed = 1f;
     private float _rotationInput = 0f;
 
@@ -46,6 +48,7 @@ public class ShipController : MonoBehaviour
     public float Boost3Speed { get { return boost3Speed; } }
     public AnimationCurve BoostAccelerationCurve { get { return boostAccelerationCurve; } }
     public AnimationCurve BrakeCurve { get { return brakeCurve; } }
+    public float StunTime { get { return stunTime; } }
     public CameraManager CameraManager { get { return cameraManager; } }
     public CinemachineVirtualCamera IdleCam { get { return idleCam; } }
     public CinemachineVirtualCamera AccelerationCam { get { return accelerationCam; } }
@@ -92,6 +95,7 @@ public class ShipController : MonoBehaviour
         _currentState.UpdateLogic();
 
         HandleRotationInput();
+        //Rotate();
 
         speedMeter.text = ((int)_currentSpeed).ToString();
     }
@@ -110,17 +114,22 @@ public class ShipController : MonoBehaviour
     {
         _currentState.UpdatePhysics();
 
-        Accelerate();
-        Rotate();
+        //Accelerate();
     }
 
-    private void Accelerate()
+    public void Accelerate()
     {
         _rb.velocity = _currentSpeed * Time.fixedDeltaTime * transform.forward;
     }
 
-    private void Rotate()
+    public void Rotate()
     {
-        transform.Rotate(new Vector3(0, _rotationInput * rotationSpeed, 0));
+        transform.Rotate(new Vector3(0, _rotationInput * rotationSpeed * Time.deltaTime, 0));
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log("Hit");
+        _currentState.OnCollisionEnter(collision);
     }
 }
